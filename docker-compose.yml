@@ -1,7 +1,7 @@
 version: "3.2"
 services:
 
-  vending_app:
+  max_min:
     restart: unless-stopped
     env_file: .env
     build:
@@ -12,26 +12,25 @@ services:
         target: 15500
     environment:
       - JWT_SECRET=$JWT_SECRET
-      - DB_HOST=mongo_db
+      - DB_HOST=mongo_max_min
       - DB_NAME=$DB_NAME
       - DB_PORT=$DB_PORT
       - DB_USER=$DB_USER
       - DB_PWD=$DB_PWD
     depends_on:
-      - mongo_db
+      - mongo_max_min
 
-  mongo_db:
+  mongo_max_min:
     image: mongo
-    container_name: mongo_db
     restart: unless-stopped
     env_file: .env
     environment:
       - MONGO_INITDB_ROOT_USERNAME=$DB_USER
       - MONGO_INITDB_ROOT_PASSWORD=$DB_PWD
     ports:
-      - "27017:27017"
+      - "28017:27017"
     volumes:
-      - vending_mongo:/data/db
+      - max_min:/data/db
 
 volumes:
-  vending_mongo:
+  max_min:

@@ -41,7 +41,6 @@ export const Product = mongoose => {
 };
 
 //add constraint that role is either "buyer" or "seller"
-
 export const User = mongoose => {
   var userSchema = mongoose.Schema({
     userId: {
@@ -57,27 +56,6 @@ export const User = mongoose => {
     password: {
       type: String,
       required: true
-    },
-    deposit: {
-      type: Number,
-      validate: {
-        validator: function(input) {
-          return typeof input === "number";
-        },
-        message: "Deposit must be a number"
-      },
-      default: 0
-    },
-    role: {
-      type: String,
-      default: "buyer"
-    },
-    signedIn: {
-      type: Boolean,
-      default: false
-    },
-    refreshToken: {
-      type: String
     }
   });
   return mongoose.model("User", userSchema);

@@ -1,10 +1,10 @@
 FROM node:14-alpine
 
-ADD . /vending-app
-WORKDIR /vending-app
+ADD . /max-min
+WORKDIR /max-min
 
-COPY package*.json ./vending-app/
-COPY nodemon.json ./vending-app/
+COPY package*.json ./max-min/
+COPY nodemon.json ./max-min/
 RUN npm install
 
 EXPOSE 15500
