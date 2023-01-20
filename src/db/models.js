@@ -1,43 +1,58 @@
 //add constraint: cost is multiple of 5's
 
-export const Product = mongoose => {
-  var productSchema = mongoose.Schema({
-    productId: {
+export const Maze = mongoose => {
+  var mazeSchema = mongoose.Schema({
+    mazeId: {
       type: String,
       required: true,
       unique: true
     },
-    amountAvailable: {
-      type: Number,
+    gridSize: {
+      type: [
+        {
+          type: Number
+        }
+      ],
       required: true,
       validate: {
         validator: function(input) {
-          return typeof input === "number";
+          return input.length === 2;
         },
-        message: "amountAvailable must be a number"
+        message: "gridSize is 2-number array"
       }
     },
-    cost: {
-      type: Number,
-      required: true,
-      validate: {
-        validator: function(input) {
-          return input % 5 === 0 && input > 0;
-        },
-        message: "Deposit should be in multiple of 5"
-      }
+    walls: {
+      type: [
+        {
+          type: String
+        }
+      ],
+      required: true
     },
-    productName: {
+    entrance: {
       type: String,
-      required: true,
-      unique: true
+      required: true
     },
-    sellerId: {
+    min: {
+      type: [
+        {
+          type: String
+        }
+      ]
+    },
+    max: {
+      type: [
+        {
+          type: String
+        }
+      ]
+    },
+    ownerId: {
       type: String,
       required: true
     }
   });
-  return mongoose.model("Product", productSchema);
+  return mongoose.model("Maze", mazeSchema);
 };
 
 //add constraint that role is either "buyer" or "seller"

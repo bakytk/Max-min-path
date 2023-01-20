@@ -6,7 +6,7 @@ const router = express.Router();
 import bodyParser from "body-parser";
 router.use(bodyParser.json());
 
-import { controllers } from "./controllers.js";
+import { controllers } from "./controllers/index.js";
 import { authenticate } from "./auth.js";
 
 if (!JWT_SECRET) {
@@ -19,9 +19,9 @@ router.get("/alive", controllers.ping);
 router.post("/user", controllers.signup);
 router.post("/login", controllers.signin);
 
-router.get("/product", controllers.getProduct);
-router.post("/product", confirmToken, controllers.createProduct);
-router.put("/product", confirmToken, controllers.putProduct);
+router.post("/maze", confirmToken, controllers.createMaze);
+//router.get("/product", controllers.getProduct);
+//router.put("/product", confirmToken, controllers.putProduct);
 
 router.all("/*", controllers.fallback);
 router.use((error, _, res, __) => {

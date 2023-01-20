@@ -1,6 +1,6 @@
-<img src="https://i.ibb.co/16y7W7W/vending.jpg" width="300"><br/><br/>
+<img src="https://i.ibb.co/xMptX8T/maze.webp" width="300"><br/><br/>
 
-### Vending-API
+### Max-min path
 
 ##### Guidelines
 
@@ -13,20 +13,17 @@
 ##### Schemas
 
 ```
-Product {
-productId,
-amountAvailable,
-cost,
-productName,
-sellerId
-}
-
 User {
 userId,
 username,
-password,
-deposit,
-role
+password
+}
+
+Maze {
+mazeId,
+gridSize,
+walls,
+entrance
 }
 ```
 
