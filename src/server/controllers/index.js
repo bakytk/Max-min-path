@@ -81,7 +81,7 @@ export const controllers = {
         username,
         password
       });
-      console.log("user", user);
+      //console.log("user", user);
       if (!(user.length > 0)) {
         throw new Error("Username not found!");
       }
@@ -122,7 +122,7 @@ export const controllers = {
         entrance,
         ownerId: userId
       });
-      console.log("maze", maze);
+      console.log("maze created: ", maze);
       await maze.save();
       return res.json({
         message: "Maze successfully created!",
@@ -138,7 +138,6 @@ export const controllers = {
   getSolution: async (req, res) => {
     try {
       let { userId } = req.decode;
-      console.log("userId, role", userId);
       let { mazeId } = req.params;
       let { steps } = req.query;
       if (!(mazeId && steps)) {
@@ -148,6 +147,10 @@ export const controllers = {
       console.log("maze", maze);
       if (!(maze.length > 0)) {
         throw new Error("Maze not found!");
+      }
+      let { ownerId } = maze[0];
+      if (ownerId != userId) {
+        throw new Error("Attempt to access non-owned maze!");
       }
       let result;
       if (steps === "min") {
