@@ -4,7 +4,8 @@ import {
   canVisit,
   buildMaze,
   construct2DArray,
-  letterCellValue
+  letterCellValue,
+  anyExit
 } from "./utils.js";
 //import { linkedList } from "./linked_list.js";
 
@@ -19,16 +20,14 @@ export const minPath = async maze => {
   }
 };
 
-//25b785e8-9173-4fea-9ec8-fd443c08471d: B4 -> A5
-//4608fced-c83b-4193-b176-65c21999aee7
+//7291c1c9-f8be-4dd5-88c6-220dbc6b6423: B5 -> A6
+//01a9671b-0c5c-4dc5-9d9d-6657b34372e6=init
 
 // get shortest path or throw
 const BFSearch = async (matrix, entry) => {
   //init visited bool matrix
-  console.log("BFinput", matrix, entry);
-  let src = new Point(0, 0);
-  let dest = new Point(0, 7);
-  if (matrix[src.x][src.y] != 1 || matrix[dest.x][dest.y] != 1) return -1;
+  console.log("BF entry", entry);
+  let src = new Point(entry[0], entry[1]);
 
   //init bool array
   let height = matrix.length;
@@ -46,16 +45,19 @@ const BFSearch = async (matrix, entry) => {
   let start = new qNode(src, 0);
   queue.push(start);
   while (queue) {
+    console.log("queue", queue, queue.length);
     let current = queue.shift();
     let { point, dist } = current;
     let { x, y } = point;
 
     //record traverse history
-    let result = letterCellValue([[x, y]]);
+    let result = await letterCellValue([[x, y]]);
     history.push(result[0]);
 
-    //check if exit
-    if (point.x == dest.x && point.y == dest.y) {
+    //check if any exit
+    let isExit = await anyExit(point, matrix);
+    console.log("isExit", isExit);
+    if (isExit) {
       console.log("history:", history);
       return dist;
     }

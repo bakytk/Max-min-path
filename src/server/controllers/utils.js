@@ -54,48 +54,52 @@ export const construct2DArray = (height, width, seed) => {
 const numericCellValue = arr => {
   let result = [];
   for (const str of arr) {
-    let [letter, second] = str.split("");
+    let [letter, num] = str.split("");
     if (!ALPHABET.includes(letter)) {
       throw new Error(`Inappropriate character for cell letter : ${letter}!`);
     }
-    let first = ALPHABET.indexOf(letter);
-    second = Number(second) - 1;
+    let first = Number(num) - 1;
+    let second = ALPHABET.indexOf(letter);
     result.push([first, second]);
   }
   return result;
 };
 
-export const letterCellValue = arr => {
+export const letterCellValue = async arr => {
   let result = [];
   for (let [x, y] of arr) {
-    let letter = ALPHABET[x];
-    let num = y + 1;
+    let letter = ALPHABET[y];
+    let num = x + 1;
     result.push(letter + num);
   }
   return result;
+};
+
+export const anyExit = async (point, matrix) => {
+  let { x, y } = point;
+  let last_row = matrix.length - 1;
+  let width = matrix[0].length;
+  console.log("last_row", x, y, width, last_row, x === last_row);
+  if (x === last_row) {
+    for (let w = 0; w < width; w++) {
+      //if cell not = 0
+      console.log("matrix[x][w]", w, matrix[x][w]);
+      if (matrix[x][w]) {
+        if (y === w) return true;
+      }
+    }
+  }
+  return false;
 };
 
 export const buildMaze = async maze => {
   let { gridSize, entrance: entry_cell, walls } = maze;
   let entrance = numericCellValue([entry_cell])[0];
 
-  let matrix_ = construct2DArray(gridSize[0], gridSize[1], 1);
+  let matrix = construct2DArray(gridSize[0], gridSize[1], 1);
   let numericWalls = numericCellValue(walls);
   for (let [x, y] of numericWalls) {
-    matrix_[x][y] = 0;
+    matrix[x][y] = 0;
   }
-  //console.log("buildMaze: ", matrix_);
-
-  let matrix = [
-    [1, 0, 1, 1, 1, 1, 0, 1, 1, 1],
-    [1, 0, 1, 0, 1, 1, 1, 0, 1, 1],
-    [1, 1, 1, 0, 1, 1, 0, 1, 0, 1],
-    [0, 0, 0, 0, 1, 0, 0, 0, 0, 1],
-    [1, 1, 1, 0, 1, 1, 1, 0, 1, 0],
-    [1, 0, 1, 1, 1, 1, 0, 1, 0, 0],
-    [1, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-    [1, 0, 1, 1, 1, 1, 0, 1, 1, 1],
-    [1, 1, 0, 0, 0, 0, 1, 0, 0, 1]
-  ];
-  return { matrix: matrix_, entrance };
+  return { matrix, entrance };
 };
