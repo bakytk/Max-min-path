@@ -1,5 +1,3 @@
-//add constraint: cost is multiple of 5's
-
 export const Maze = mongoose => {
   var mazeSchema = mongoose.Schema({
     mazeId: {

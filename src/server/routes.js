@@ -4,6 +4,7 @@ import express from "express";
 const router = express.Router();
 
 import bodyParser from "body-parser";
+router.use(bodyParser.urlencoded({ extended: false }));
 router.use(bodyParser.json());
 
 import { controllers } from "./controllers/index.js";
@@ -20,7 +21,7 @@ router.post("/user", controllers.signup);
 router.post("/login", controllers.signin);
 
 router.post("/maze", confirmToken, controllers.createMaze);
-//router.get("/product", controllers.getProduct);
+router.get("/maze/:mazeId/solution", confirmToken, controllers.getSolution);
 //router.put("/product", confirmToken, controllers.putProduct);
 
 router.all("/*", controllers.fallback);

@@ -1,9 +1,13 @@
 const { JWT_SECRET } = process.env;
 const COIN_VALUES = [5, 10, 20, 50, 100];
 
-import db from "../../db/index.js";
+//https://www.geeksforgeeks.org/find-maximum-path-length-in-a-binary-matrix
+//https://www.geeksforgeeks.org/shortest-path-in-a-binary-maze
+
 import jwt from "jsonwebtoken";
 import { uuid } from "uuidv4";
+import db from "../../db/index.js";
+import { minPath } from "./bfs.js";
 
 if (!JWT_SECRET) {
   throw new Error("Missing JWT_SECRET env");
@@ -111,9 +115,6 @@ export const controllers = {
       }
       let mazeId = uuid();
       let gridSize = gridsize.split("x").map(v => Number(v));
-      if (gridSize[0] != gridSize[1]) {
-        throw new Error("Edge lengths are not equal !");
-      }
       let maze = new Maze({
         mazeId,
         gridSize,
@@ -128,39 +129,42 @@ export const controllers = {
         data: { mazeId }
       });
     } catch (e) {
-      console.error("createProduct error", e);
-      res.send(`createProduct error: ${e.message}`);
+      console.error("createMaze error", e);
+      res.send(`createMaze error: ${e.message}`);
+    }
+  },
+
+  //4608fced-c83b-4193-b176-65c21999aee7
+  getSolution: async (req, res) => {
+    try {
+      let { userId } = req.decode;
+      console.log("userId, role", userId);
+      let { mazeId } = req.params;
+      let { steps } = req.query;
+      if (!(mazeId && steps)) {
+        throw new Error("Either of 'mazeId or steps' not passed!");
+      }
+      let maze = await Maze.find({ mazeId });
+      console.log("maze", maze);
+      if (!(maze.length > 0)) {
+        throw new Error("Maze not found!");
+      }
+      let result;
+      if (steps === "min") {
+        result = await minPath(maze[0]);
+      } else if (steps === "max") {
+        //
+      } else {
+        throw new Error("Ineligible value for 'steps' param!");
+      }
+      return res.json({
+        path: result
+      });
+    } catch (e) {
+      console.error("getSolution error", e);
+      res.send(`getSolution error: ${e.message}`);
     }
   }
-
-  // getProduct: async (req, res) => {
-  //   try {
-  //     let { productName: name } = req.body;
-  //     if (!name) {
-  //       throw new Error("'productName' param not passed!");
-  //     } else {
-  //       name = name.trim();
-  //     }
-  //     let product = await Product.find({
-  //       productName: name
-  //     });
-  //     //console.log("product", product);
-  //     if (!(product.length > 0)) {
-  //       throw new Error("Product not found!");
-  //     }
-  //     let { productName, amountAvailable, cost } = product[0];
-  //     return res.status(200).json({
-  //       data: {
-  //         productName,
-  //         amountAvailable,
-  //         cost
-  //       }
-  //     });
-  //   } catch (e) {
-  //     console.error("getProduct error", e);
-  //     res.send(`getProduct error: ${e.message}`);
-  //   }
-  // },
   //
   // putProduct: async (req, res) => {
   //   try {
