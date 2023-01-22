@@ -6,17 +6,16 @@ import {
   construct2DArray,
   letterCellValue,
   anyExit,
-  recoverPath
+  recoverPath,
+  longestExitPath
 } from "./utils.js";
 
 export const maxPath = async maze => {
   try {
     //console.log("mazeInput:", maze);
     let { matrix, entrance } = await buildMaze(maze);
-    let { history, dist } = await BFSearch(matrix, entrance);
-    //console.log("bfs history, dist: ", history, dist);
-    let path = await recoverPath(history);
-    console.log("bfs path: ", path.length, dist);
+    let path = await BFSearch(matrix, entrance);
+    console.log("bfs path: ", path.length);
     return path;
   } catch (e) {
     throw e;
@@ -37,15 +36,16 @@ const BFSearch = async (matrix, entry) => {
   // init queue & params
   visited[src.x][src.y] = true;
   let queue = [];
+  let exits = [];
   let start = new qNode(src, 0);
   queue.push(start);
 
   //track history as tree & linked list for path
   let history = [];
 
-  while (queue) {
+  while (queue.length > 0) {
     let current = queue.shift();
-    //console.log("current", current);
+    console.log("current", current);
 
     let { point, dist } = current;
     let { x, y } = point;
@@ -53,33 +53,38 @@ const BFSearch = async (matrix, entry) => {
     //record traverse history
     let result = await letterCellValue([[x, y]]);
     let cellAddress = result[0];
+    console.log("currentAddress", cellAddress);
     history.push(current);
-    //console.log("interim history", cellAddress, history);
 
     //check if any exit
     let isExit = await anyExit(point, matrix);
     if (isExit) {
-      return { history, dist };
+      console.log("exitPoint:", point);
+      exits.push(current);
     }
 
     // traverse adjacent cells & push to queue
-    //loops to traverse cell values in four directions
-    let rNum = [-1, 0, 0, 1];
-    let cNum = [0, -1, 1, 0];
+    // loops to traverse cell values in four directions
+    let rNum = [1, 0, 0, -1];
+    let cNum = [0, 1, -1, 0];
     for (let i = 0; i < 4; i++) {
       let row = point.x + rNum[i];
       let col = point.y + cNum[i];
-      if (
-        canVisit(row, col, matrix) &&
-        matrix[row][col] == 1 &&
-        !visited[row][col]
-      ) {
+      if (row < 0 || col < 0) continue;
+      if (!canVisit(row, col, matrix) && matrix[row][col] == 0) continue;
+      if (!visited[row][col]) {
         visited[row][col] = true;
         let newNode = new qNode(new Point(row, col), dist + 1);
         newNode.set_previous(cellAddress);
         queue.push(newNode);
+      } else {
+        queue.pop();
       }
     }
   }
-  throw new Error("Maze exit not found !");
+  if (exits.length > 0) {
+    return await longestExitPath(exits, history);
+  } else {
+    throw new Error("Maze exit not found !");
+  }
 };

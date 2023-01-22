@@ -110,6 +110,46 @@ export const letterCellValue = async arr => {
   return result;
 };
 
+export const longestExitPath = async (exits, history) => {
+  let max_dist = 0;
+  for (let exit of exits) {
+    let { dist } = exit;
+    if (dist > max_dist) {
+      max_dist = dist;
+    }
+  }
+
+  let finalAddress = "";
+  let expected_previous = "";
+
+  for (let exit of exits) {
+    let { point, dist } = exit;
+    if (dist === max_dist) {
+      let { point, prev } = exit;
+      let { x, y } = point;
+      let convert = await letterCellValue([[x, y]]);
+      finalAddress = convert[0];
+      expected_previous = prev;
+    }
+  }
+
+  let result = [];
+  result.push(finalAddress);
+
+  for (let [i, node] of history.reverse().entries()) {
+    let { point, prev } = node;
+    let { x, y } = point;
+    let convert = await letterCellValue([[x, y]]);
+    let letterAddress = convert[0];
+
+    if (expected_previous === letterAddress) {
+      result.unshift(letterAddress);
+      expected_previous = prev;
+    }
+  }
+  return result;
+};
+
 export const anyExit = async (point, matrix) => {
   let { x, y } = point;
   let last_row = matrix.length - 1;
