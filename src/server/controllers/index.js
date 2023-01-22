@@ -8,6 +8,7 @@ import jwt from "jsonwebtoken";
 import { uuid } from "uuidv4";
 import db from "../../db/index.js";
 import { minPath } from "./bfs.js";
+import { maxPath } from "./dfs.js";
 
 if (!JWT_SECRET) {
   throw new Error("Missing JWT_SECRET env");
@@ -156,7 +157,7 @@ export const controllers = {
       if (steps === "min") {
         result = await minPath(maze[0]);
       } else if (steps === "max") {
-        //
+        result = await maxPath(maze[0]);
       } else {
         throw new Error("Ineligible value for 'steps' param!");
       }

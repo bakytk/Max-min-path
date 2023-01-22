@@ -10,11 +10,11 @@ import {
 //import { linkedList } from "./linked_list.js";
 import Tree from "./tree.js";
 
-export const minPath = async maze => {
+export const maxPath = async maze => {
   try {
     //console.log("mazeInput:", maze);
     let { matrix, entrance } = await buildMaze(maze);
-    let { history, dist } = await BFSearch(matrix, entrance);
+    let { history, dist } = await DFSearch(matrix, entrance);
     //build linkedList from history & dist
     return dist;
   } catch (e) {
@@ -23,9 +23,9 @@ export const minPath = async maze => {
 };
 
 // get shortest path or throw
-const BFSearch = async (matrix, entry) => {
+const DFSearch = async (matrix, entry) => {
   //init visited bool matrix
-  console.log("BF.entry", entry);
+  console.log("DF.entry", entry);
   let src = new Point(entry[0], entry[1]);
 
   //init bool array
@@ -36,18 +36,12 @@ const BFSearch = async (matrix, entry) => {
 
   // init queue & params
   visited[src.x][src.y] = true;
-  let queue = [];
 
   //track history as tree
   let history = [];
 
-  let start = new qNode(src, 0);
-  queue.push(start);
-  while (queue) {
-    console.log("queue", queue, queue.length);
-    let current = queue.shift();
-
-    let { point, dist } = current;
+  async function traverse(node) {
+    let { point, dist } = node;
     let { x, y } = point;
 
     //record traverse history
@@ -63,8 +57,8 @@ const BFSearch = async (matrix, entry) => {
 
     // traverse adjacent cells & push to queue
     //loops to traverse cell values in four directions
-    let rNum = [-1, 0, 0, 1];
-    let cNum = [0, -1, 1, 0];
+    let rNum = [1, 0, 0, -1];
+    let cNum = [0, 1, -1, 0];
     for (let i = 0; i < 4; i++) {
       let row = point.x + rNum[i];
       let col = point.y + cNum[i];
@@ -75,9 +69,17 @@ const BFSearch = async (matrix, entry) => {
       ) {
         visited[row][col] = true;
         let newNode = new qNode(new Point(row, col), dist + 1);
-        queue.push(newNode);
+        await traverse(newNode);
       }
     }
   }
-  throw new Error("Maze solution not found !");
+
+  //start dfs search
+  let start = new qNode(src, 0);
+  let { history, dist } = await traverse(start);
+  if (history && dist) {
+    return { history, dist };
+  } else {
+    throw new Error("Maze solution not found !");
+  }
 };
