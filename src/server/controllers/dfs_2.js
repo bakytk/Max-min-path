@@ -9,7 +9,7 @@ import {
   recoverPath
 } from "./utils.js";
 
-export const minPath = async maze => {
+export const maxPath = async maze => {
   try {
     //console.log("mazeInput:", maze);
     let { matrix, entrance } = await buildMaze(maze);

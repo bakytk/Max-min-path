@@ -38,8 +38,43 @@ export class qNode {
   constructor(point, dist) {
     this.point = point; // cell coordinates
     this.dist = dist; // from source
+    this.prev = "";
+  }
+  set_previous(cellAddress) {
+    //console.log(this.name);
+    this.prev = cellAddress;
   }
 }
+
+export const recoverPath = async history => {
+  /*
+    -start from tail
+    -if preceding cell address = current.prev, push to result
+  */
+  let result = [];
+  //let prev = history[history.length - 1]["prev"];
+  let expected_previous = "";
+
+  for (let [i, node] of history.reverse().entries()) {
+    //let node = history.pop();
+    let { point, prev } = node;
+    let { x, y } = point;
+    let convert = await letterCellValue([[x, y]]);
+    let letterAddress = convert[0];
+    //console.log("recoverPath letterAddress: ", letterAddress);
+
+    if (i === 0) {
+      result.push(letterAddress);
+      expected_previous = prev;
+    } else {
+      if (expected_previous === letterAddress) {
+        result.unshift(letterAddress);
+        expected_previous = prev;
+      }
+    }
+  }
+  return result;
+};
 
 export const canVisit = (row, col, matrix) => {
   let HEIGHT = matrix.length;

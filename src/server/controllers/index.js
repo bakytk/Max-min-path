@@ -1,8 +1,4 @@
 const { JWT_SECRET } = process.env;
-const COIN_VALUES = [5, 10, 20, 50, 100];
-
-//https://www.geeksforgeeks.org/find-maximum-path-length-in-a-binary-matrix
-//https://www.geeksforgeeks.org/shortest-path-in-a-binary-maze
 
 import jwt from "jsonwebtoken";
 import { uuid } from "uuidv4";
@@ -153,16 +149,16 @@ export const controllers = {
       if (ownerId != userId) {
         throw new Error("Attempt to access non-owned maze!");
       }
-      let result;
+      let path;
       if (steps === "min") {
-        result = await minPath(maze[0]);
+        path = await minPath(maze[0]);
       } else if (steps === "max") {
-        result = await maxPath(maze[0]);
+        path = await maxPath(maze[0]);
       } else {
         throw new Error("Ineligible value for 'steps' param!");
       }
       return res.json({
-        path: result
+        path: path
       });
     } catch (e) {
       console.error("getSolution error", e);
