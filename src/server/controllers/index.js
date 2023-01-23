@@ -119,7 +119,7 @@ export const controllers = {
         entrance,
         ownerId: userId
       });
-      console.log("maze created: ", maze);
+      //console.log("maze created: ", maze);
       await maze.save();
       return res.json({
         message: "Maze successfully created!",
@@ -141,7 +141,7 @@ export const controllers = {
         throw new Error("Either of 'mazeId or steps' not passed!");
       }
       let maze = await Maze.find({ mazeId });
-      console.log("maze", maze);
+      //console.log("maze", maze);
       if (!(maze.length > 0)) {
         throw new Error("Maze not found!");
       }
@@ -188,7 +188,7 @@ export const controllers = {
       let maze = await Maze.find({
         mazeId
       });
-      console.log("maze", maze);
+      //console.log("maze", maze);
       if (!(maze.length > 0)) {
         throw new Error("Maze not found!");
       }

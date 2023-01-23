@@ -8,35 +8,19 @@ chai.use(chaiHttp);
 //deposit, buy, one-crud
 
 const agent = chai.request.agent(server);
-let BUYER_TOKEN = "";
-let SELLER_TOKEN = "";
-let PRODUCT_ID = "";
+let ACCESS_TOKEN = "";
+let MAZE_ID = "";
 
 before(function(done) {
   agent
-    .get("/user")
+    .post("/user")
     .set("content-type", "application/json")
     .send({
-      username: "bak_buyer",
+      username: `User-${Math.floor(Math.random() * 10000)}`,
       password: "1234"
     })
     .then(function(res) {
-      BUYER_TOKEN = res.body.access_token;
-      //done();
-    })
-    .catch(function(err) {
-      done(err);
-    });
-
-  agent
-    .get("/user")
-    .set("content-type", "application/json")
-    .send({
-      username: "bak_seller",
-      password: "1234"
-    })
-    .then(function(res) {
-      SELLER_TOKEN = res.body.access_token;
+      ACCESS_TOKEN = res.body.access_token;
       done();
     })
     .catch(function(err) {
@@ -44,49 +28,57 @@ before(function(done) {
     });
 });
 
-describe("vending-machine", function() {
-  it("CREATE product", function(done) {
+describe("max-min path", function() {
+  it("CREATE maze", function(done) {
     agent
-      .post("/product")
-      .set("authorization", `Bearer ${SELLER_TOKEN}`)
+      .post("/maze")
+      .set("authorization", `Bearer ${ACCESS_TOKEN}`)
       .send({
-        productName: `Random-product-${Math.floor(Math.random() * 10000)}`,
-        amountAvailable: 20,
-        cost: 10
+        entrance: "A1",
+        gridSize: "8x8",
+        walls: [
+          "C1",
+          "G1",
+          "A2",
+          "C2",
+          "E2",
+          "G2",
+          "C3",
+          "E3",
+          "B4",
+          "C4",
+          "E4",
+          "F4",
+          "G4",
+          "B5",
+          "E5",
+          "B6",
+          "D6",
+          "E6",
+          "G6",
+          "H6",
+          "B7",
+          "D7",
+          "G7",
+          "B8"
+        ]
       })
       .end(function(err, res) {
-        console.log("createProduct response", res.body.data);
-        PRODUCT_ID = res.body.data.productId;
+        console.log("createMaze response", res.body.data);
+        MAZE_ID = res.body.data.mazeId;
         res.should.have.status(200);
         done();
       });
   });
 
-  it("MAKE deposit", function(done) {
+  it("GET solution", function(done) {
     agent
-      .post("/deposit")
-      .set("authorization", `Bearer ${BUYER_TOKEN}`)
-      .send({
-        coin: 100 //70
-      })
+      .get(`/maze/${MAZE_ID}/solution?steps=min`)
+      .set("authorization", `Bearer ${ACCESS_TOKEN}`)
+      .send()
       .end(function(err, res) {
-        console.log("deposit response", res.body.data);
-        res.body.data.deposit.should.gt(0);
-        done();
-      });
-  });
-
-  it("BUY product", function(done) {
-    agent
-      .post("/buy")
-      .set("authorization", `Bearer ${BUYER_TOKEN}`)
-      .send({
-        productId: PRODUCT_ID,
-        amountProducts: 2
-      })
-      .end(function(err, res) {
-        console.log("buyProduct response:", res.body.data);
-        res.should.have.status(200);
+        console.log("getSolution response", res.body.path);
+        res.body.path.length.should.eq(12);
         done();
       });
   });
