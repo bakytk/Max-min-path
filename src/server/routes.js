@@ -22,7 +22,7 @@ router.post("/login", controllers.signin);
 
 router.post("/maze", confirmToken, controllers.createMaze);
 router.get("/maze/:mazeId/solution", confirmToken, controllers.getSolution);
-//router.put("/product", confirmToken, controllers.putProduct);
+router.get("/maze", confirmToken, controllers.getMaze);
 
 router.all("/*", controllers.fallback);
 router.use((error, _, res, __) => {

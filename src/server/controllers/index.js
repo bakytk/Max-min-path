@@ -149,14 +149,20 @@ export const controllers = {
       if (ownerId != userId) {
         throw new Error("Attempt to access non-owned maze!");
       }
+
+      //get solution & record it in db
       let path;
+      let updateData = {};
       if (steps === "min") {
         path = await minPath(maze[0]);
+        updateData["min"] = path;
       } else if (steps === "max") {
         path = await maxPath(maze[0]);
+        updateData["max"] = path;
       } else {
         throw new Error("Ineligible value for 'steps' param!");
       }
+      await Maze.findOneAndUpdate({ mazeId }, { ...updateData });
       return res.json({
         path: path
       });
@@ -164,53 +170,38 @@ export const controllers = {
       console.error("getSolution error", e);
       res.send(`getSolution error: ${e.message}`);
     }
+  },
+
+  getMaze: async (req, res) => {
+    try {
+      //step 1. check if we have userId & role
+      let { userId } = req.decode;
+      if (!userId) {
+        throw new Error("'userId' not validated");
+      }
+
+      //step 2. parse productName & search for it
+      let { mazeId } = req.body;
+      if (!mazeId) {
+        throw new Error("required 'mazeId' param not passed!");
+      }
+      let maze = await Maze.find({
+        mazeId
+      });
+      console.log("maze", maze);
+      if (!(maze.length > 0)) {
+        throw new Error("Maze not found!");
+      }
+      let { ownerId, gridSize, walls, entrance } = maze[0];
+
+      //step 3. check if requester is owner
+      if (!(userId === ownerId)) {
+        throw new Error("ownerId unauthorized!");
+      }
+      return res.json({ gridSize, walls, entrance });
+    } catch (e) {
+      console.error("getMaze", e);
+      res.send("getMaze error: ", e.message);
+    }
   }
-  //
-  // putProduct: async (req, res) => {
-  //   try {
-  //     //step 1. check if we have userId & role
-  // let { userId, role } = req.decode;
-  // //console.log("userId, role", userId, role);
-  // if (!(userId && role === "seller")) {
-  //   throw new Error("'userId or role' not validated");
-  // }
-  //
-  //     //step 2. parse productName & search for it
-  //     let { productName, amountAvailable, cost, sellerId } = req.body;
-  //     if (!productName) {
-  //       throw new Error("required 'productName' param not passed!");
-  //     } else {
-  //       productName = productName.trim();
-  //     }
-  //     let product = await Product.find({
-  //       productName
-  //     });
-  //     //console.log("product", product);
-  //     if (!(product.length > 0)) {
-  //       throw new Error("Product not found!");
-  //     }
-  //     let { sellerId: db_sellerId } = product[0];
-  //
-  //     //step 3. check role & requester is who created
-  //     if (!(userId === db_sellerId && role === "seller")) {
-  //       throw new Error("Either role or sellerId is ineligible!");
-  //     }
-  //
-  //     //step 4.update
-  //     let updateData = {};
-  //     if (cost) {
-  //       updateData["cost"] = Number(cost);
-  //     } else if (amountAvailable) {
-  //       updateData["amountAvailable"] = Number(amountAvailable);
-  //     }
-  //     await Product.findOneAndUpdate(
-  //       { productName: productName },
-  //       { ...updateData }
-  //     );
-  //     return res.status(200).json({ message: "Product successfully updated!" });
-  //   } catch (e) {
-  //     console.error("putProduct", e);
-  //     res.send("putProduct error:", e.message);
-  //   }
-  // }
 };
