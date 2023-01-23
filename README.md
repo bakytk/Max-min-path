@@ -6,7 +6,7 @@
 
 - assume 'row x col' format for gridSize param
 
-##### Docker local development & testing
+##### Docker local development & Testing
 
 ```
 # start containers
@@ -27,11 +27,15 @@ heroku local web
 # deploy
 heroku create
 git remote add heroku <YOUR_HEROKU_GIT_REMOTE_URL>
-heroku git:remote -a <YOUR_HEROKU_APP_NAME>
-heroku git:remote -a young-shelf-40889
+git add .
+git commit -m 'push repo'
+git push heroku main
+
+# public-url:
+https://young-shelf-40889.herokuapp.com
 ```
 
-##### Schemas
+##### Mongo schemas
 
 ```
 User {
@@ -53,16 +57,17 @@ ownerId
 
 ```
 #1: sign-up:
-curl --location --request POST 'http://localhost:15500/user' --header 'Content-Type: application/json' --data-raw '{"username": "bak_buyer", "password": "1234", "role": "buyer"}'
-
-curl --location --request POST 'http://localhost:15500/user' --header 'Content-Type: application/json' --data-raw '{"username": "bak_seller", "password": "1234", "role": "seller" }'
+curl --location --request POST 'http://localhost:15500/register' --header 'Content-Type: application/json' --data-raw '{"username": "john", "password": "1234"}'
 
 #2: sign-in
-curl --location --request GET 'http://localhost:15500/user' --header 'Content-Type: application/json' --data-raw '{"username": "bak_seller", "password": "1234" }'
+curl --location --request POST 'http://localhost:15500/login' --header 'Content-Type: application/json' --data-raw '{"username": "john", "password": "1234" }'
 
-#3: create-product
-curl --location --request POST 'http://localhost:15500/product' \
---header 'Content-Type: application/json' \
---data-raw '{"productName": "Coke", "cost": 5, "amountAvailable": 20 }' \
---header 'Authorization: Bearer JWT_TOKEN'
+#3: create-maze
+curl --location --request POST 'http://localhost:15500/maze' --header 'Content-Type: application/json' --data-raw '{"entrance": "A1", "gridSize": "8x8", "walls": ["C1", "G1", "A2", "C2", "E2", "G2", "C3", "E3", "B4", "C4", "E4", "F4", "G4", "A6", "E5", "B6", "H2", "D6", "E6", "G6", "H6", "B7", "D7", "G7", "B8"] }' --header 'Authorization: Bearer JWT_TOKEN'
+
+#4: get-solution
+curl --location --request GET 'http://localhost:15500/maze/<maze_id>/solutions?steps=min' --header 'Content-Type: application/json' --header 'Authorization: Bearer JWT_TOKEN'
+
+#5: get-maze
+curl --location --request GET 'http://localhost:15500/maze' --header 'Content-Type: application/json' --header 'Authorization: Bearer JWT_TOKEN' --data-raw '{"mazeId": <maze_id>}'
 ```
