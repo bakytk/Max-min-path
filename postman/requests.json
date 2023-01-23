@@ -1,0 +1,218 @@
+{
+	"info": {
+		"_postman_id": "012462e2-00b8-48b9-a6f7-ff032749c30e",
+		"name": "MAX_MIN",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "18542445"
+	},
+	"item": [
+		{
+			"name": "ping",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:15500/alive",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "15500",
+					"path": [
+						"alive"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "register",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"username\": \"bak\",\n    \"password\": \"1234\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:15500/user",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "15500",
+					"path": [
+						"user"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "login",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"username\": \"bak\",\n    \"password\": \"1234\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:15500/login",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "15500",
+					"path": [
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "createMaze",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiIzNDNmNGNlMi1mMmVkLTQxM2MtYjc5NS1mNzQ5NjIyMzk5NzEiLCJpYXQiOjE2NzQ0NjUyMzcsImV4cCI6MTY3NDQ2NzAzN30.QE8mB6UKt4IyPCIp-SjcuqOImG9fE4T7UJEEIF6u9bM",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"entrance\":  \"A1\",\n    \"gridSize\": \"8x8\",\n    \"walls\": [\n        \"C1\", \"G1\", \"A2\", \"C2\", \"E2\", \"G2\", \"C3\", \"E3\",\n\"B4\", \"C4\", \"E4\", \"F4\", \"G4\", \"A6\", \"E5\", \"B6\", \"H2\",\n\"D6\", \"E6\", \"G6\", \"H6\", \"B7\", \"D7\", \"G7\", \"B8\"]\n}"
+				},
+				"url": {
+					"raw": "http://localhost:15500/maze",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "15500",
+					"path": [
+						"maze"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getSolution",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiIzNDNmNGNlMi1mMmVkLTQxM2MtYjc5NS1mNzQ5NjIyMzk5NzEiLCJpYXQiOjE2NzQ0NjUyMzcsImV4cCI6MTY3NDQ2NzAzN30.QE8mB6UKt4IyPCIp-SjcuqOImG9fE4T7UJEEIF6u9bM",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://localhost:15500/maze/05e593e2-d451-49d3-9b31-141092783d2d/solution?steps=min",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "15500",
+					"path": [
+						"maze",
+						"05e593e2-d451-49d3-9b31-141092783d2d",
+						"solution"
+					],
+					"query": [
+						{
+							"key": "steps",
+							"value": "min"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getMaze",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiIzNDNmNGNlMi1mMmVkLTQxM2MtYjc5NS1mNzQ5NjIyMzk5NzEiLCJpYXQiOjE2NzQ0NjUyMzcsImV4cCI6MTY3NDQ2NzAzN30.QE8mB6UKt4IyPCIp-SjcuqOImG9fE4T7UJEEIF6u9bM",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"mazeId\": \"e6ce9c3a-09d7-4c53-92af-47e14bb56f94\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:15500/maze",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "15500",
+					"path": [
+						"maze"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
