@@ -25,6 +25,10 @@ docker compose -f docker-compose.yml run max_min npm run test
 heroku local web
 
 # deploy
+heroku create
+git remote add heroku <YOUR_HEROKU_GIT_REMOTE_URL>
+heroku git:remote -a <YOUR_HEROKU_APP_NAME>
+heroku git:remote -a young-shelf-40889
 ```
 
 ##### Schemas
