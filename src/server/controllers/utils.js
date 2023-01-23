@@ -154,11 +154,11 @@ export const anyExit = async (point, matrix) => {
   let { x, y } = point;
   let last_row = matrix.length - 1;
   let width = matrix[0].length;
-  console.log("last_row", x, y, width, last_row, x === last_row);
+  //console.log("last_row", x, y, width, last_row, x === last_row);
   if (x === last_row) {
     for (let w = 0; w < width; w++) {
       //if cell not = 0
-      console.log("matrix[x][w]", w, matrix[x][w]);
+      //console.log("matrix[x][w]", w, matrix[x][w]);
       if (matrix[x][w]) {
         if (y === w) return true;
       }

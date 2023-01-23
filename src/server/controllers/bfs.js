@@ -16,7 +16,7 @@ export const minPath = async maze => {
     let { history, dist } = await BFSearch(matrix, entrance);
     //console.log("bfs history, dist: ", history, dist);
     let path = await recoverPath(history);
-    console.log("bfs path: ", path.length, dist);
+    //console.log("bfs path: ", path.length, dist);
     return path;
   } catch (e) {
     throw e;

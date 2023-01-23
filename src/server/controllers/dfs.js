@@ -16,7 +16,7 @@ export const maxPath = async maze => {
     let { history, dist } = await DFSearch(matrix, entrance);
     //console.log("bfs history, dist: ", history, dist);
     let path = await recoverPath(history);
-    console.log("dfs path: ", path.length, dist);
+    //console.log("dfs path: ", path.length, dist);
     return path;
   } catch (e) {
     throw e;
@@ -27,7 +27,6 @@ export const maxPath = async maze => {
 const DFSearch = async (matrix, entry) => {
   try {
     //init visited bool matrix
-    console.log("DF.entry", entry);
     let src = new Point(entry[0], entry[1]);
 
     //init bool array
@@ -50,7 +49,7 @@ const DFSearch = async (matrix, entry) => {
 
       //record traverse history
       history.push(node);
-      console.log("interim history:", history);
+      //console.log("interim history:", history);
 
       //check if any exit
       let isExit = await anyExit(point, matrix);
@@ -84,7 +83,7 @@ const DFSearch = async (matrix, entry) => {
     //start dfs search
     let start = new qNode(src, 0);
     let result = await traverse(start);
-    console.log("dfs result:", result);
+    //console.log("dfs result:", result);
     return result;
   } catch (e) {
     //return new Error("Maze solution not found !");

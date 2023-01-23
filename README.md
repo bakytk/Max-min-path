@@ -2,6 +2,18 @@
 
 ### Max-min path
 
+##### Start & test
+
+```
+# start containers
+docker-compose up --build
+# curl commands listed below
+
+# testing
+docker compose -f docker-compose.yml build max_min
+docker compose -f docker-compose.yml run max_min npm run test
+```
+
 ##### Guidelines
 
 - assume 'row x col' format for gridSize param
@@ -19,7 +31,8 @@ Maze {
 mazeId,
 gridSize,
 walls,
-entrance
+entrance,
+ownerId
 }
 ```
 

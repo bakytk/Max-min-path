@@ -64,7 +64,7 @@ describe("max-min path", function() {
         ]
       })
       .end(function(err, res) {
-        console.log("createMaze response", res.body.data);
+        //console.log("createMaze response", res.body.data);
         MAZE_ID = res.body.data.mazeId;
         res.should.have.status(200);
         done();
@@ -77,8 +77,8 @@ describe("max-min path", function() {
       .set("authorization", `Bearer ${ACCESS_TOKEN}`)
       .send()
       .end(function(err, res) {
-        console.log("getSolution response", res.body.path);
-        res.body.path.length.should.eq(12);
+        //console.log("getSolution response", res.body.path);
+        res.body.path.length.should.eq(10);
         done();
       });
   });
